@@ -1,10 +1,12 @@
 <template>
-  <form>
+  <form @submit.prevent="submitItem">
     <label for="name">Name: </label>
     <input v-model="name" type="text" name="name" />
 
-    <label for="price">Price: </label>
-    <input v-model="price" type="text" name="price" />
+    <!-- <label for="price">Price: </label>
+    <input v-model="item.price" type="text" name="price" /> -->
+
+    <button type="submit">Submit</button>
   </form>
 </template>
 
@@ -19,8 +21,13 @@ export default defineComponent({
   data() {
     return {
       name: "",
-      price: "",
     };
+  },
+  methods: {
+    submitItem() {
+      this.$emit("submit-list", this.name);
+      this.name = "";
+    },
   },
 });
 </script>

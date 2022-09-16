@@ -1,26 +1,35 @@
 <script lang="ts">
+import type Item from "@/types/types";
 import { defineComponent } from "vue";
 import ListContainer from "../components/ListContainer.vue";
 import ListForm from "../components/ListForm.vue";
-
-interface ListItem {
-  id: number;
-  name: string;
-  price: string;
-}
 
 export default defineComponent({
   components: { ListContainer, ListForm },
   data() {
     return {
-      listItems: new Array<ListItem>(),
+      listItems: [] as { id: number; name: string; listItems: Item[] }[],
     };
   },
 
   methods: {
-    addNewList(newList: ListItem) {
+    addNewList(name: string) {
       // this.list.push(newList);
-      this.listItems.push(newList);
+      // newItem.id = this.listItems.length;
+      // console.log("Adding list: ", newItem);
+
+      let newListItems: Item[] = [];
+
+      this.listItems.push({
+        id: this.listItems.length,
+        name,
+        listItems: newListItems,
+      });
+    },
+
+    clearAllLists() {
+      console.log("Clearing all lists");
+      this.listItems = [];
     },
   },
 });
@@ -31,12 +40,20 @@ export default defineComponent({
     <h2>Lists</h2>
 
     <h4>Create a list</h4>
-    <ListForm />
+    <ListForm @submit-list="addNewList" />
+
+    <h4>Delete all list</h4>
+    <button @click="clearAllLists">Clear</button>
 
     <p>These are the lists</p>
     <!-- Example List -->
-    <ListContainer title="First list" />
+    <!-- <ListContainer name="First list" /> -->
 
-    <ListContainer v-for="item in listItems" :key="item.id" />
+    <ListContainer
+      v-for="items in listItems"
+      :key="items.id"
+      :name="items.name"
+      :listData="items.listItems"
+    />
   </main>
 </template>

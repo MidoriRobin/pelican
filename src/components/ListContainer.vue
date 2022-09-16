@@ -1,25 +1,28 @@
 <script lang="ts">
+import type Item from "@/types/types";
+import type { PropType } from "vue";
 import ListItem from "./ListItem.vue";
 
 export default {
   components: { ListItem },
 
   data() {
-    return {
-      items: ["Item 1", "Item 2", "Item 3"],
-    };
+    return {};
   },
   props: {
-    title: String,
-    listData: { type: Array<{}>, required: false },
+    name: String,
+    listData: { type: Object as PropType<Item>, required: false },
   },
   methods: {},
 };
 </script>
 
 <template>
-  <h3>{{ title }}</h3>
+  <h3>{{ name }}</h3>
+
+  <h5>Add an item</h5>
+
   <ul>
-    <ListItem v-for="item in items" :key="item">{{ item }}</ListItem>
+    <ListItem v-for="item in listData" :key="item">{{ item.name }}</ListItem>
   </ul>
 </template>
