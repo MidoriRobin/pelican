@@ -26,6 +26,14 @@ export default defineComponent({
         listItems: newListItems,
       });
     },
+    addToList(item: Item, listName: string) {
+      console.log("adding an item to list");
+      let itemList = this.listItems.find(
+        (element) => element.name === listName
+      );
+
+      itemList?.listItems.push(item);
+    },
 
     clearAllLists() {
       console.log("Clearing all lists");
@@ -54,6 +62,7 @@ export default defineComponent({
       :key="items.id"
       :name="items.name"
       :listData="items.listItems"
+      @add-item="addToList"
     />
   </main>
 </template>
