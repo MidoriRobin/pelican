@@ -40,29 +40,65 @@ export default defineComponent({
       this.listItems = [];
     },
   },
+  computed: {
+    listEmpty() {
+      return this.listItems.length == 0 ? true : false;
+    },
+  },
 });
 </script>
 
 <template>
-  <main>
+  <main class="list-main container">
     <h2>Lists</h2>
 
-    <h4>Create a list</h4>
-    <ListForm @submit-list="addNewList" />
+    <hr />
 
-    <h4>Delete all list</h4>
-    <button @click="clearAllLists">Clear</button>
+    <div class="list-form">
+      <h4>Create a list</h4>
+      <!-- TODO: Declare emits in component -->
+      <ListForm @submit-list="addNewList" />
+    </div>
 
-    <p>These are the lists</p>
-    <!-- Example List -->
-    <!-- <ListContainer name="First list" /> -->
+    <hr />
 
-    <ListContainer
-      v-for="items in listItems"
-      :key="items.id"
-      :name="items.name"
-      :listData="items.listItems"
-      @add-item="addToList"
-    />
+    <div class="list-options">
+      <h4>Delete all lists</h4>
+      <button
+        @click="clearAllLists"
+        class="btn btn-danger"
+        :disabled="listEmpty"
+      >
+        Clear
+      </button>
+    </div>
+
+    <hr />
+
+    <div class="list">
+      <h4>These are the lists</h4>
+      <!-- Example List -->
+      <!-- <ListContainer name="First list" /> -->
+
+      <!-- TODO: Declare emits in component -->
+      <ListContainer
+        v-for="items in listItems"
+        :key="items.id"
+        :name="items.name"
+        :listData="items.listItems"
+        @add-item="addToList"
+      />
+    </div>
   </main>
 </template>
+
+<style scoped>
+main {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+div {
+  margin: 1.5rem 0;
+}
+</style>
