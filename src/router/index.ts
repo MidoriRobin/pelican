@@ -33,6 +33,8 @@ const router = createRouter({
       component: ListsView,
     },
   ],
+  // Where was this mentioned
+  linkActiveClass: "active",
 });
 
 export default router;
