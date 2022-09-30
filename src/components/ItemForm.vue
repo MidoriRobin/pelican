@@ -1,12 +1,30 @@
 <template>
   <form @submit.prevent="submitItem">
-    <label for="name">Name: </label>
-    <input v-model="item.name" type="text" name="name" />
+    <div class="name-area">
+      <label for="name" class="form-label">Name: </label>
+      <input
+        v-model="item.name"
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Black Pepper"
+        class="form-control form-control-sm"
+      />
+    </div>
 
-    <label for="price">Price: </label>
-    <input v-model="item.price" type="text" name="price" />
+    <div class="price-area">
+      <label for="price" class="form-label">Price: </label>
+      <input
+        v-model="item.price"
+        type="text"
+        name="price"
+        id="name"
+        placeholder="10.99"
+        class="form-control form-control-sm"
+      />
+    </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-primary btn-sm">Add Item</button>
   </form>
 </template>
 
@@ -31,7 +49,15 @@ export default defineComponent({
       this.item = { name: "", price: "" };
     },
   },
+  emits: ["submit-form"],
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+div {
+  margin: 0.5rem 0;
+}
+.btn {
+  margin: 1rem 0;
+}
+</style>

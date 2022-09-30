@@ -50,9 +50,10 @@ export default defineComponent({
 
 <template>
   <main class="list-main container">
-    <h2>Lists</h2>
-
-    <hr />
+    <div class="header-area">
+      <h2>Lists</h2>
+      <hr />
+    </div>
 
     <div class="list-form">
       <h4>Create a list</h4>
@@ -100,5 +101,9 @@ main {
 
 div {
   margin: 1.5rem 0;
+}
+
+div.header-area {
+  margin: 0;
 }
 </style>
