@@ -27,7 +27,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="accordion list-cont" id="accordionItem">
+  <div class="accordion list-cont" :id="`accordion-${name}List`">
     <h3>{{ name }}</h3>
 
     <div class="item-form-area accordion-item">
@@ -36,15 +36,15 @@ export default defineComponent({
           class="accordion-button"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#collapseItemForm"
+          :data-bs-target="`#collapse${name}ItemForm`"
         >
           Add an item
         </button>
       </h2>
       <div
         class="accordion-collapse collapse"
-        id="collapseItemForm"
-        data-bs-parent="#accordionItem"
+        :id="`collapse${name}ItemForm`"
+        :data-bs-parent="`#accordion-${name}List`"
       >
         <div class="accordion-body">
           <ItemForm @submit-form="addItem" />
