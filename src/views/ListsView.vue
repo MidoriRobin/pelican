@@ -49,16 +49,33 @@ export default defineComponent({
 </script>
 
 <template>
-  <main class="list-main container">
+  <main class="accordion list-main container" id="accordionMain">
     <div class="header-area">
       <h2>Lists</h2>
       <hr />
     </div>
 
-    <div class="list-form">
-      <h4>Create a list</h4>
+    <div class="list-form accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseListForm"
+        >
+          Create a list
+        </button>
+      </h2>
       <!-- TODO: Declare emits in component -->
-      <ListForm @submit-list="addNewList" />
+      <div
+        class="accordion-collapse collapse"
+        id="collapseListForm"
+        data-bs-parent="#accordionMain"
+      >
+        <div class="accordion-body">
+          <ListForm @submit-list="addNewList" />
+        </div>
+      </div>
     </div>
 
     <hr />
@@ -105,5 +122,18 @@ div {
 
 div.header-area {
   margin: 0;
+}
+
+.accordion-item {
+  border-radius: 4px;
+  border: none;
+  background-color: var(--color-background-soft);
+  color: white;
+}
+
+.accordion-item button {
+  background-color: inherit;
+  color: white;
+  border: none;
 }
 </style>
