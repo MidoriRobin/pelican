@@ -1,5 +1,6 @@
 <script lang="ts">
-import type Item from "@/types/types";
+import type { Item } from "@/types/types";
+import type { ShopList } from "@/types/types";
 import { defineComponent } from "vue";
 import ListContainer from "../components/ListContainer.vue";
 import ListForm from "../components/ListForm.vue";
@@ -8,7 +9,7 @@ export default defineComponent({
   components: { ListContainer, ListForm },
   data() {
     return {
-      listItems: [] as { id: number; name: string; listItems: Item[] }[],
+      shopLists: [] as ShopList[],
     };
   },
 
@@ -20,29 +21,29 @@ export default defineComponent({
 
       let newListItems: Item[] = [];
 
-      this.listItems.push({
-        id: this.listItems.length,
+      this.shopLists.push({
+        id: this.shopLists.length,
         name,
-        listItems: newListItems,
+        items: newListItems,
       });
     },
     addToList(item: Item, listName: string) {
       console.log("adding an item to list");
-      let itemList = this.listItems.find(
+      let itemList = this.shopLists.find(
         (element) => element.name === listName
       );
 
-      itemList?.listItems.push(item);
+      itemList?.items.push(item);
     },
 
     clearAllLists() {
       console.log("Clearing all lists");
-      this.listItems = [];
+      this.shopLists = [];
     },
   },
   computed: {
     listEmpty() {
-      return this.listItems.length == 0 ? true : false;
+      return this.shopLists.length == 0 ? true : false;
     },
   },
 });
@@ -100,10 +101,10 @@ export default defineComponent({
 
       <!-- TODO: Declare emits in component -->
       <ListContainer
-        v-for="items in listItems"
-        :key="items.id"
-        :name="items.name"
-        :listData="items.listItems"
+        v-for="shopList in shopLists"
+        :key="shopList.id"
+        :name="shopList.name"
+        :listData="shopList.items"
         @add-item="addToList"
       />
     </div>

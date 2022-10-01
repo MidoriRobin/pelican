@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import type Item from "@/types/types";
+import type { Item } from "@/types/types";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -43,6 +43,7 @@ export default defineComponent({
     };
   },
   methods: {
+    // TODO: Add input validation
     submitItem() {
       // emit within an emit
       this.$emit("submit-form", this.item);

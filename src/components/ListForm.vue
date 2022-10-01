@@ -33,6 +33,7 @@ export default defineComponent({
     };
   },
   methods: {
+    // TODO: add input validation, unique names
     submitItem() {
       this.$emit("submit-list", this.name);
       this.name = "";

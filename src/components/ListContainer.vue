@@ -1,5 +1,5 @@
 <script lang="ts">
-import type Item from "@/types/types";
+import type { Item } from "@/types/types";
 import { defineComponent } from "vue";
 import ListItem from "./ListItem.vue";
 import ItemForm from "./ItemForm.vue";
