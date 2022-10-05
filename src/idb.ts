@@ -1,9 +1,12 @@
 import { readonly } from "vue";
-import type { ShopList } from "./types/types";
+import type { ShopList, Item } from "./types/types";
 
 const DB_NAME = "listdb";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 let DB: IDBDatabase;
+
+const SHOPLIST_TABLE_NAME = "shop_list";
+const ITEMLIST_TABLE_NAME = "item_list";
 
 export default {
   /**
@@ -29,13 +32,23 @@ export default {
         resolve(DB);
       };
 
+      // can this be dynamic?
+      //Create an admin page?
       request.onupgradeneeded = (e: any) => {
         console.log("onupgradeneeded");
         const db: IDBDatabase = e.target.result;
-        db.createObjectStore("lists", {
+
+        const shopObjStore = db.createObjectStore(SHOPLIST_TABLE_NAME, {
           autoIncrement: true,
           keyPath: "id",
         });
+
+        shopObjStore.createIndex("name", "name", { unique: true });
+
+        const itemObjStore = db.createObjectStore(ITEMLIST_TABLE_NAME, {
+          keyPath: ["listId", "name"],
+        });
+        // itemObjStore.createIndex("name", "name", { unique: true });
       };
     });
   },
@@ -43,13 +56,44 @@ export default {
   /**
    *  Gets All shoplists registered to db
    */
-  async getLists(): Promise<ShopList[]> {
+  async getShopLists(): Promise<ShopList[]> {
     const db = await this.getDb();
 
     return new Promise((resolve, reject) => {
-      const trans = db.transaction(["lists"], "readonly");
+      const trans = db.transaction([SHOPLIST_TABLE_NAME], "readonly");
 
-      trans.oncomplete = () => {
+      trans.oncomplete = async () => {
+        const listIds = lists.map((element) => element.id);
+
+        // TODO: how to await async callback in forEach loop
+        // Loading items in late
+        // listIds.forEach(async (element) => {
+        //   const shopList = lists.find((shopList) => shopList.id === element);
+
+        //   const items = await this.getListItems(<number>element);
+        //   if (items) {
+        //     shopList?.items.push(...items);
+        //   }
+        // });
+
+        const items = lists.map(async (element) =>
+          element.items.push(...(await this.getListItems(<number>element?.id)))
+        );
+
+        await Promise.all(items);
+
+        // lists.forEach((element) => {
+        //   const tempItem: Item = {
+        //     listId: element.id,
+        //     name: "thing",
+        //     price: "000",
+        //   };
+
+        //   element.items.push(tempItem);
+        // });
+
+        console.log("new lists are: ", lists);
+
         resolve(lists);
       };
 
@@ -57,7 +101,7 @@ export default {
         console.log("An error occured trying to get all lists", event);
       };
 
-      const store = trans.objectStore("lists");
+      const store = trans.objectStore(SHOPLIST_TABLE_NAME);
       const lists: ShopList[] = [];
 
       store.openCursor().onsuccess = (e: any) => {
@@ -79,7 +123,7 @@ export default {
     const db = await this.getDb();
 
     return new Promise((resolve, reject) => {
-      const trans = db.transaction(["lists"], "readonly");
+      const trans = db.transaction([SHOPLIST_TABLE_NAME], "readonly");
 
       trans.oncomplete = () => {
         resolve(shopList);
@@ -90,7 +134,7 @@ export default {
         reject();
       };
 
-      const store = trans.objectStore("lists");
+      const store = trans.objectStore(SHOPLIST_TABLE_NAME);
       let shopList: ShopList;
 
       store.get(id).onsuccess = (e: any) => {
@@ -107,13 +151,13 @@ export default {
     const db = await this.getDb();
 
     return new Promise<void>((resolve) => {
-      const trans = db.transaction(["lists"], "readwrite");
+      const trans = db.transaction([SHOPLIST_TABLE_NAME], "readwrite");
       trans.oncomplete = () => {
         resolve();
       };
 
-      const store = trans.objectStore("lists");
-      id ? store.put(list, id) : store.put(list);
+      const store = trans.objectStore(SHOPLIST_TABLE_NAME);
+      id ? store.add(list, id) : store.put(list);
     });
   },
 
@@ -125,27 +169,116 @@ export default {
     const db = await this.getDb();
 
     return new Promise<void>((resolve) => {
-      const trans = db.transaction(["lists"], "readwrite");
+      const trans = db.transaction([SHOPLIST_TABLE_NAME], "readwrite");
       trans.oncomplete = () => {
         resolve();
       };
 
-      const store = trans.objectStore("lists");
+      const store = trans.objectStore(SHOPLIST_TABLE_NAME);
       store.delete(id);
     });
   },
 
+  /**
+   * Deletes all list in the list database
+   */
   async deleteAllLists() {
     const db = await this.getDb();
 
     return new Promise<void>((resolve) => {
-      const trans = db.transaction(["lists"], "readwrite");
+      const trans = db.transaction([SHOPLIST_TABLE_NAME], "readwrite");
       trans.oncomplete = () => {
         resolve();
       };
 
-      const store = trans.objectStore("lists");
+      const store = trans.objectStore(SHOPLIST_TABLE_NAME);
       store.clear();
     });
+  },
+
+  /**
+   * Fetches all items with the specified listId
+   * @param listId list id for items to obtain
+   */
+  async getListItems(listId: number): Promise<Item[]> {
+    const db = await this.getDb();
+
+    return new Promise((resolve) => {
+      const trans = db.transaction([ITEMLIST_TABLE_NAME], "readwrite");
+
+      trans.oncomplete = () => {
+        resolve(items);
+      };
+
+      trans.onerror = (event) => {
+        console.log("An error occured trying to get all lists", event);
+      };
+
+      const items: Item[] = [];
+      const store = trans.objectStore(ITEMLIST_TABLE_NAME);
+
+      store.openCursor().onsuccess = (e: any) => {
+        const cursor: IDBCursorWithValue = e.target.result;
+        if (cursor) {
+          const item = cursor.value as Item;
+
+          if (item.listId == listId) {
+            items.push(cursor.value);
+          }
+
+          cursor.continue();
+        }
+      };
+    });
+  },
+
+  /**
+   * Saves the item to idb
+   * @param item item object to be saved to list
+   */
+  async saveListItem(item: Item) {
+    const db = await this.getDb();
+
+    return new Promise<void>((resolve) => {
+      const trans = db.transaction([ITEMLIST_TABLE_NAME], "readwrite");
+
+      trans.oncomplete = () => {
+        resolve();
+      };
+
+      trans.onerror = () => {
+        console.log("Could not save list item");
+      };
+
+      const store = trans.objectStore(ITEMLIST_TABLE_NAME);
+      console.log("Saving list item", item);
+      store.put(item);
+    });
+  },
+
+  async deleteListItems(listId: number) {
+    const db = await this.getDb();
+
+    return new Promise<void>((resolve) => {
+      const trans = db.transaction([ITEMLIST_TABLE_NAME], "readwrite");
+
+      trans.oncomplete = () => {
+        resolve();
+      };
+
+      trans.onerror = () => {
+        console.log("Could not save list item");
+      };
+
+      const store = trans.objectStore(ITEMLIST_TABLE_NAME);
+      console.log("Deleting items for list: ", listId);
+      store.delete;
+    });
+  },
+
+  async deleteListItem(listId: number, listName: string) {
+    const db = await this.getDb();
+
+    return new Promise((resolve) => {});
   },
 };
