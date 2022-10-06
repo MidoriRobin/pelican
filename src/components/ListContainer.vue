@@ -65,12 +65,13 @@ export default defineComponent({
         :data-bs-parent="`#accordion-${name}List`"
       >
         <div class="accordion-body">
-          <ItemForm @submit-form="addItem" />
+          <ItemForm @submit-form="addItem" :list-id="listId" />
         </div>
       </div>
     </div>
 
     <ul v-if="itemCount > 0">
+      <!-- TODO: add price -->
       <ListItem
         v-for="item in listData"
         :key="item.name"

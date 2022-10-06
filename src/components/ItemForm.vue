@@ -42,12 +42,15 @@ export default defineComponent({
       item: {} as Item,
     };
   },
+  props: {
+    listId: Number,
+  },
   methods: {
     // TODO: Add input validation
     submitItem() {
       // emit within an emit
       this.$emit("submit-form", this.item);
-      this.item = { name: "", price: "" };
+      this.item = { listId: this.listId as number, name: "", price: "" };
     },
   },
   emits: ["submit-form"],
