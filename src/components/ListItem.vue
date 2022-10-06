@@ -1,18 +1,33 @@
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   data() {
     return { someData: {} };
   },
-  props: {
-    item: String,
-  },
-};
+  emits: ["delete-event"],
+});
 </script>
 
 <template>
   <li>
-    <p><slot /></p>
+    <p>
+      <slot />
+    </p>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      aria-label="Close"
+      @click="$emit('delete-event')"
+    ></button>
   </li>
 </template>
 
-<style scoped></style>
+<style scoped>
+li {
+  display: flex;
+  flex-flow: row nowrap;
+  list-style: none;
+  justify-content: space-between;
+}
+</style>

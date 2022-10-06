@@ -4,41 +4,74 @@ import type { ShopList } from "@/types/types";
 import { defineComponent } from "vue";
 import ListContainer from "../components/ListContainer.vue";
 import ListForm from "../components/ListForm.vue";
+import idb from "../idb";
 
 export default defineComponent({
   components: { ListContainer, ListForm },
   data() {
     return {
       shopLists: [] as ShopList[],
+      db: {} as IDBDatabase,
+      ready: false,
     };
   },
 
+  async created() {
+    this.db = await idb.getDb();
+    //? Should emit or some custom event be used to update the list everytime an edit is made?
+    this.shopLists = await idb.getShopLists();
+  },
+
+  async beforeUpdate() {
+    console.log("Updating lists");
+    // this.shopLists = await idb.getLists();
+  },
+
   methods: {
-    addNewList(name: string) {
-      // this.list.push(newList);
-      // newItem.id = this.listItems.length;
-      // console.log("Adding list: ", newItem);
+    async addNewList(name: string) {
+      let newList: ShopList = { name, items: [] };
 
-      let newListItems: Item[] = [];
-
-      this.shopLists.push({
-        id: this.shopLists.length,
-        name,
-        items: newListItems,
-      });
-    },
-    addToList(item: Item, listName: string) {
-      console.log("adding an item to list");
-      let itemList = this.shopLists.find(
-        (element) => element.name === listName
-      );
-
-      itemList?.items.push(item);
+      await idb.saveList(newList);
+      this.shopLists = await idb.getShopLists();
     },
 
-    clearAllLists() {
+    async addToList(item: Item, listId: number) {
+      console.log("submitting form data to db: ", item);
+
+      item.listId = listId;
+      // Used spread operator as an error was being thrown on idb side due to the proxy being passed over
+      await idb.saveListItem({ ...item });
+      this.shopLists = await idb.getShopLists();
+    },
+
+    async deleteFromList(itemId: number, listId: number) {
+      console.log("deleting item from list: ", itemId);
+
+      const shopList = await idb.getShopList(listId);
+
+      // let newList = shopList.items.filter((item) => item.id !== itemId);
+
+      console.log(shopList);
+    },
+
+    async clearAllLists() {
       console.log("Clearing all lists");
-      this.shopLists = [];
+      await idb.deleteAllLists();
+
+      this.shopLists = await idb.getShopLists();
+    },
+
+    async deleteList(id: number) {
+      console.log("deleting list..", id);
+      await idb.deleteList(id);
+      this.shopLists = await idb.getShopLists();
+    },
+
+    async deleteItem(item: Item) {
+      console.log("sending delete request to database: ", item);
+
+      await idb.deleteListItem({ ...item });
+      this.shopLists = await idb.getShopLists();
     },
   },
   computed: {
@@ -103,9 +136,12 @@ export default defineComponent({
       <ListContainer
         v-for="shopList in shopLists"
         :key="shopList.id"
+        :listId="shopList.id"
         :name="shopList.name"
         :listData="shopList.items"
         @add-item="addToList"
+        @delete-list="deleteList"
+        @delete-item="deleteItem"
       />
     </div>
   </main>

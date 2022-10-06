@@ -63,34 +63,11 @@ export default {
       const trans = db.transaction([SHOPLIST_TABLE_NAME], "readonly");
 
       trans.oncomplete = async () => {
-        const listIds = lists.map((element) => element.id);
-
-        // TODO: how to await async callback in forEach loop
-        // Loading items in late
-        // listIds.forEach(async (element) => {
-        //   const shopList = lists.find((shopList) => shopList.id === element);
-
-        //   const items = await this.getListItems(<number>element);
-        //   if (items) {
-        //     shopList?.items.push(...items);
-        //   }
-        // });
-
         const items = lists.map(async (element) =>
           element.items.push(...(await this.getListItems(<number>element?.id)))
         );
 
         await Promise.all(items);
-
-        // lists.forEach((element) => {
-        //   const tempItem: Item = {
-        //     listId: element.id,
-        //     name: "thing",
-        //     price: "000",
-        //   };
-
-        //   element.items.push(tempItem);
-        // });
 
         console.log("new lists are: ", lists);
 
@@ -168,9 +145,11 @@ export default {
   async deleteList(id: number) {
     const db = await this.getDb();
 
+    this.deleteListItems(id);
+
     return new Promise<void>((resolve) => {
       const trans = db.transaction([SHOPLIST_TABLE_NAME], "readwrite");
-      trans.oncomplete = () => {
+      trans.oncomplete = async () => {
         resolve();
       };
 
@@ -256,7 +235,29 @@ export default {
     });
   },
 
+  /**
+   * Deletes all the items for the list specified
+   * @param listId list id for associated items
+   */
   async deleteListItems(listId: number) {
+    const items = await this.getListItems(listId);
+
+    return new Promise<void>((resolve) => {
+      try {
+        items.forEach((element) => this.deleteListItem(element));
+
+        resolve();
+      } catch (error) {
+        console.log("Error trying to delete all items for list: ", listId);
+      }
+    });
+  },
+
+  /**
+   * Deletes an item from the database
+   * @param item Item object to be deleted
+   */
+  async deleteListItem(item: Item) {
     const db = await this.getDb();
 
     return new Promise<void>((resolve) => {
@@ -267,18 +268,12 @@ export default {
       };
 
       trans.onerror = () => {
-        console.log("Could not save list item");
+        console.log("Could not delete list item");
       };
 
       const store = trans.objectStore(ITEMLIST_TABLE_NAME);
-      console.log("Deleting items for list: ", listId);
-      store.delete;
+      console.log("Deleting item: ", item);
+      store.delete([item.listId, item.name]);
     });
-  },
-
-  async deleteListItem(listId: number, listName: string) {
-    const db = await this.getDb();
-
-    return new Promise((resolve) => {});
   },
 };
