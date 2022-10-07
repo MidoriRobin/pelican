@@ -28,10 +28,24 @@ export default defineComponent({
       console.log("Deleting this list");
       this.$emit("delete-list", this.listId);
     },
+    numToPrice(number: number) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(number);
+    },
   },
   computed: {
     itemCount() {
       return this.listData?.length ? this.listData?.length : 0;
+    },
+
+    total(): number {
+      const initialVal = 0;
+
+      return this.listData?.reduce((accumulator, currVal) => {
+        return accumulator + Number(currVal.price);
+      }, initialVal) as number;
     },
   },
   emits: ["add-item", "delete-item", "delete-list"],
@@ -76,9 +90,13 @@ export default defineComponent({
         v-for="item in listData"
         :key="item.name"
         @delete-event="deleteItem(item)"
-        >{{ item.name }}</ListItem
+        >{{ item.name }} - {{ numToPrice(item.price) }}</ListItem
       >
     </ul>
+
+    <hr />
+
+    <h5>Total: {{ numToPrice(total) }}</h5>
   </div>
 </template>
 

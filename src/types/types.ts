@@ -1,7 +1,7 @@
 export interface Item {
   listId: number;
   name: string;
-  price: string;
+  price: number;
 }
 
 export interface ShopList {

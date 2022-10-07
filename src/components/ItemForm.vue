@@ -1,7 +1,8 @@
 <template>
-  <form @submit.prevent="submitItem">
+  <form @submit.prevent="submitItem" class="needs-validation" novalidate>
     <div class="name-area">
       <label for="name" class="form-label">Name: </label>
+      <!-- <p v-if="!isValidName" class="validation">Input a valid name</p> -->
       <input
         v-model="item.name"
         type="text"
@@ -14,6 +15,7 @@
 
     <div class="price-area">
       <label for="price" class="form-label">Price: </label>
+      <p v-if="!isValid" class="validation">Input a valid dollar value or 0</p>
       <input
         v-model="item.price"
         type="text"
@@ -40,6 +42,7 @@ export default defineComponent({
   data() {
     return {
       item: {} as Item,
+      isValid: true,
     };
   },
   props: {
@@ -49,8 +52,34 @@ export default defineComponent({
     // TODO: Add input validation
     submitItem() {
       // emit within an emit
-      this.$emit("submit-form", this.item);
-      this.item = { listId: this.listId as number, name: "", price: "" };
+      if (this.isAllValid) {
+        this.isValid = true;
+        this.$emit("submit-form", this.item);
+        this.item = { listId: this.listId as number, name: "", price: 0 };
+      } else {
+        this.isValid = false;
+      }
+    },
+  },
+  computed: {
+    isValidPrice() {
+      if (isNaN(this.item.price)) {
+        return false;
+      }
+      return true;
+    },
+    isValidName() {
+      if (this.item.name === "") {
+        return false;
+      }
+
+      return true;
+    },
+    isAllValid() {
+      if (!this.isValidPrice) {
+        return false;
+      }
+      return true;
     },
   },
   emits: ["submit-form"],
@@ -63,5 +92,12 @@ div {
 }
 .btn {
   margin: 1rem 0;
+}
+
+.validation {
+  color: red;
+
+  font-size: 0.8rem;
+  margin: 0;
 }
 </style>
