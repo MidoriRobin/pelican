@@ -55,6 +55,14 @@ nav {
   background-color: aqua;
 }
 
+header {
+  grid-area: 1 / 1 / 2 / 4;
+}
+
+main {
+  grid-area: 2 / 1 / 3 / 4;
+}
+
 @media (max-width: 1023px) {
   header {
     margin-bottom: 1rem;
