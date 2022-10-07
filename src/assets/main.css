@@ -32,5 +32,6 @@ a,
     display: flex;
     flex-flow: row nowrap;
     padding: 0 2rem;
+    width: 100vw;
   }
 }
