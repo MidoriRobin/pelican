@@ -2,11 +2,9 @@
 
 import { register } from "register-service-worker";
 
-console.log("Checking if in production");
-
-if (process.env.NODE_ENV === "production") {
+if (import.meta.env.NODE_ENV === "production") {
   console.log("is in production");
-  register(`${process.env.BASE_URL}service-worker.js`, {
+  register(`${import.meta.env.BASE_URL}service-worker.js`, {
     ready() {
       console.log(
         "App is being served from cache by a service worker.\n" +
