@@ -12,7 +12,7 @@ export default defineComponent({
   },
   props: {
     listId: { type: Number, required: false },
-    name: String,
+    name: { type: String, required: true },
     listData: { type: Array<Item>, required: false },
   },
   methods: {
@@ -34,6 +34,18 @@ export default defineComponent({
         currency: "USD",
       }).format(number);
     },
+    giveString(): String {
+      return "String";
+    },
+    cleanName(): String {
+      let newString = "";
+
+      if (this.name !== "" || this.name !== undefined) {
+        newString = this.name.trim().split(" ").join("");
+      }
+
+      return newString;
+    },
   },
   computed: {
     itemCount() {
@@ -53,7 +65,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="accordion list-cont" :id="`accordion-${name}List`">
+  <div class="accordion list-cont" :id="`accordion-${cleanName()}List`">
     <div class="list-head">
       <!-- TODO: flex flow row, delete button icon? -->
       <h3>{{ name }} - {{ itemCount }}</h3>
@@ -68,15 +80,15 @@ export default defineComponent({
           class="accordion-button"
           type="button"
           data-bs-toggle="collapse"
-          :data-bs-target="`#collapse${name}ItemForm`"
+          :data-bs-target="`#collapse${cleanName()}ItemForm`"
         >
           Add an item
         </button>
       </h2>
       <div
         class="accordion-collapse collapse"
-        :id="`collapse${name}ItemForm`"
-        :data-bs-parent="`#accordion-${name}List`"
+        :id="`collapse${cleanName()}ItemForm`"
+        :data-bs-parent="`#accordion-${cleanName()}List`"
       >
         <div class="accordion-body">
           <ItemForm @submit-form="addItem" :list-id="listId" />
