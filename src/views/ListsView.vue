@@ -20,6 +20,7 @@ export default defineComponent({
   async created() {
     this.db = await idb.getDb();
     //? Should emit or some custom event be used to update the list everytime an edit is made?
+
     this.shopLists = await idb.getShopLists();
   },
 
@@ -52,6 +53,7 @@ export default defineComponent({
       this.shopLists = await idb.getShopLists();
     },
 
+    //! Unused
     async deleteFromList(itemId: number, listId: number) {
       console.log("deleting item from list: ", itemId);
 
@@ -60,6 +62,12 @@ export default defineComponent({
       // let newList = shopList.items.filter((item) => item.id !== itemId);
 
       console.log(shopList);
+    },
+
+    async updateItem(item: Item, listId: number) {
+      console.log("updating item: ", item.name);
+
+      await idb.updateListItem(item, listId);
     },
 
     async clearAllLists() {

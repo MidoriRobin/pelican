@@ -26,6 +26,19 @@
       />
     </div>
 
+    <div class="quantity-area">
+      <label for="quantity" class="form-label">Quantity: </label>
+      <p v-if="!isValid" class="validation">Enter a quantity or 0</p>
+      <input
+        v-model="item.quantity"
+        type="text"
+        name="quantity"
+        id="quantity"
+        placeholder="5"
+        class="form-control form-control-sm"
+      />
+    </div>
+
     <button type="submit" class="btn btn-primary btn-sm">Add Item</button>
   </form>
 </template>
@@ -41,7 +54,7 @@ export default defineComponent({
 
   data() {
     return {
-      item: {} as Item,
+      item: { obtained: false } as Item,
       isValid: true,
     };
   },
@@ -55,7 +68,7 @@ export default defineComponent({
       if (this.isAllValid) {
         this.isValid = true;
         this.$emit("submit-form", this.item);
-        this.item = { listId: this.listId as number, name: "", price: 0 };
+        this.item = { obtained: false } as Item;
       } else {
         this.isValid = false;
       }

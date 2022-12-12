@@ -28,12 +28,7 @@ export default defineComponent({
       console.log("Deleting this list");
       this.$emit("delete-list", this.listId);
     },
-    numToPrice(number: number) {
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(number);
-    },
+
     giveString(): String {
       return "String";
     },
@@ -45,6 +40,16 @@ export default defineComponent({
       }
 
       return newString;
+    },
+    numToPrice(number: number) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(number);
+    },
+    updateListItem(item: Item) {
+      // Update item pass in updated item and list id
+      this.$emit("update-item", item, this.listId);
     },
   },
   computed: {
@@ -60,7 +65,10 @@ export default defineComponent({
       }, initialVal) as number;
     },
   },
-  emits: ["add-item", "delete-item", "delete-list"],
+  created() {
+    console.log("List data:", this.listData);
+  },
+  emits: ["add-item", "delete-item", "delete-list", "update-item"],
 });
 </script>
 
@@ -102,8 +110,9 @@ export default defineComponent({
         v-for="item in listData"
         :key="item.name"
         @delete-event="deleteItem(item)"
-        >{{ item.name }} - {{ numToPrice(item.price) }}</ListItem
-      >
+        @update-event="updateListItem"
+        :item="item"
+      />
     </ul>
 
     <hr />
