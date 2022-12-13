@@ -11,17 +11,21 @@ export default defineComponent({
     return { listItem: this.item };
   },
   props: {
-    item: { type: {} as PropType<Item>, required: true },
+    item: { type: Object as PropType<Item>, required: true },
   },
   methods: {
     updateItem() {
       // this.isObtained = !this.isObtained;
-      this.$emit("update-event", this.listItem);
+      // this.$emit("update-event", this.listItem);
     },
     flipObtained() {
       this.listItem.obtained = !this.listItem.obtained;
     },
-    numToPrice(number: number) {
+    numToPrice(number: number | undefined) {
+      if (number == undefined) {
+        return 0;
+      }
+
       return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -37,11 +41,11 @@ export default defineComponent({
     <!-- TODO: Add svgs from assets file here, guide: https://blog.logrocket.com/using-svg-and-vue-js-a-complete-guide/ -->
     <!-- TODO: Conditionally render one of these -->
     <button type="button" @click="flipObtained()" class="check-btn">
-      <CheckboxChecked v-if="listItem.obtained" color="#FFD900" />
+      <CheckboxChecked v-if="listItem?.obtained" color="#FFD900" />
       <CheckboxEmpty v-else color="#FFD900" />
     </button>
-    <p :class="{ obtained: listItem.obtained }">
-      {{ listItem.name }} - {{ numToPrice(listItem.price) }}
+    <p :class="{ obtained: listItem?.obtained }">
+      {{ listItem?.name }} - {{ numToPrice(listItem?.price) }}
     </p>
     <button
       type="button"
