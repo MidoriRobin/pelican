@@ -15,8 +15,7 @@ export default defineComponent({
   },
   methods: {
     updateItem() {
-      // this.isObtained = !this.isObtained;
-      // this.$emit("update-event", this.listItem);
+      this.$emit("update-event", this.listItem);
     },
     flipObtained() {
       this.listItem.obtained = !this.listItem.obtained;
@@ -31,6 +30,10 @@ export default defineComponent({
         currency: "USD",
       }).format(number);
     },
+    modifyAndSave() {
+      this.flipObtained();
+      this.updateItem();
+    },
   },
   emits: ["delete-event", "update-event"],
 });
@@ -40,7 +43,7 @@ export default defineComponent({
   <li>
     <!-- TODO: Add svgs from assets file here, guide: https://blog.logrocket.com/using-svg-and-vue-js-a-complete-guide/ -->
     <!-- TODO: Conditionally render one of these -->
-    <button type="button" @click="flipObtained()" class="check-btn">
+    <button type="button" @click="modifyAndSave()" class="check-btn">
       <CheckboxChecked v-if="listItem?.obtained" color="#FFD900" />
       <CheckboxEmpty v-else color="#FFD900" />
     </button>
@@ -51,7 +54,7 @@ export default defineComponent({
       type="button"
       class="btn-close btn-close-white"
       aria-label="Close"
-      @click="$emit('delete-event')"
+      @click="$emit('delete-event', listItem)"
     ></button>
   </li>
 </template>

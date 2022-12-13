@@ -14,6 +14,7 @@ export default defineComponent({
       db: {} as IDBDatabase,
       ready: false,
       invalidList: false,
+      loading: true,
     };
   },
 
@@ -22,6 +23,7 @@ export default defineComponent({
     //? Should emit or some custom event be used to update the list everytime an edit is made?
 
     this.shopLists = await idb.getShopLists();
+    this.loading = false;
   },
 
   async beforeUpdate() {
@@ -67,7 +69,16 @@ export default defineComponent({
     async updateItem(item: Item, listId: number) {
       console.log("updating item: ", item.name);
 
-      await idb.updateListItem(item, listId);
+      //! Update call for indexed db not working as expected
+      // await idb.updateListItem(item, listId);
+
+      await this.deleteItem(item)
+        .then(async () => {
+          await this.addToList(item, listId);
+        })
+        .then(() => {
+          console.log("item updated in list");
+        });
     },
 
     async clearAllLists() {
@@ -166,23 +177,29 @@ export default defineComponent({
       <h4>These are the lists</h4>
       <!-- Example List -->
       <!-- <ListContainer name="First list" /> -->
-
+      <div v-if="loading" class="d-flex justify-content-center">
+        <div class="spinner-border text-warning" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <!-- TODO: Declare emits in component -->
       <ListContainer
+        v-else
         v-for="shopList in shopLists"
         :key="shopList.id"
-        :listId="shopList.id"
+        :listId="(shopList.id as number)"
         :name="shopList.name"
         :listData="shopList.items"
         @add-item="addToList"
         @delete-list="deleteList"
         @delete-item="deleteItem"
+        @update-item="updateItem"
       />
     </div>
   </main>
 </template>
 
-<style scoped>
+<style scop ed>
 main {
   display: flex;
   flex-flow: column nowrap;

@@ -11,9 +11,9 @@ export default defineComponent({
     return {};
   },
   props: {
-    listId: { type: Number, required: false },
+    listId: { type: Number, required: true },
     name: { type: String, required: true },
-    listData: { type: Array<Item>, required: false },
+    listData: { type: Array<Item>, required: true },
   },
   methods: {
     addItem(item: Item) {
@@ -65,9 +65,6 @@ export default defineComponent({
       }, initialVal) as number;
     },
   },
-  created() {
-    console.log("List data:", this.listData);
-  },
   emits: ["add-item", "delete-item", "delete-list", "update-item"],
 });
 </script>
@@ -109,7 +106,7 @@ export default defineComponent({
       <ListItem
         v-for="item in listData"
         :key="item.name"
-        @delete-event="deleteItem(item)"
+        @delete-event="deleteItem"
         @update-event="updateListItem"
         :item="item"
       />

@@ -280,6 +280,8 @@ export default {
   async updateListItem(item: Item, listId: number) {
     const db = await this.getDb();
 
+    console.log("updating item");
+
     return new Promise<void>((resolve) => {
       const trans = db.transaction([ITEMLIST_TABLE_NAME], "readwrite");
 
