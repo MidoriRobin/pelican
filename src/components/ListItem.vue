@@ -47,9 +47,12 @@ export default defineComponent({
       <CheckboxChecked v-if="listItem?.obtained" color="#FFD900" />
       <CheckboxEmpty v-else color="#FFD900" />
     </button>
-    <p :class="{ obtained: listItem?.obtained }">
-      {{ listItem?.name }} - {{ numToPrice(listItem?.price) }}
-    </p>
+    <div class="desc-area" :class="{ obtained: listItem?.obtained }">
+      <p class="main-text">
+        {{ listItem?.name }} - {{ numToPrice(listItem?.price) }}
+      </p>
+      <span class="sub-text">Qty: {{ listItem?.quantity }}</span>
+    </div>
     <button
       type="button"
       class="btn-close btn-close-white"
@@ -73,7 +76,7 @@ li {
 }
 
 p {
-  margin: 0;
+  margin: 0 1rem;
   /* -webkit-animation: fade-out 1s ease-out reverse both;
   animation: fade-out 1s ease-out reverse both; */
 }
@@ -82,6 +85,11 @@ p.obtained {
   text-decoration: line-through;
   -webkit-animation: fade-out 1s ease-out both;
   animation: fade-out 1s ease-out both;
+}
+
+span.sub-text {
+  font-size: 0.8rem;
+  line-height: 1.5rem;
 }
 
 @keyframes fade-out {
@@ -97,5 +105,11 @@ p.obtained {
   background-color: inherit;
   border: none;
   padding: none;
+}
+
+div.desc-area {
+  display: flex;
+  flex-flow: row wrap;
+  right: 10rem;
 }
 </style>
