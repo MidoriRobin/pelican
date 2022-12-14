@@ -19,6 +19,71 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+
+
+  --primary-color-light-100: #fffae5;
+  --primary-color-light-200: #fff6cc;
+  --primary-color-light-300: #fff1b3;
+  --primary-color-light-400: #ffed99;
+  --primary-color-light-500: #ffe880;
+  --primary-color-light-600: #ffe366;
+  --primary-color-light-700: #ffdf4d;
+  --primary-color-light-800: #ffda33;
+  --primary-color-light-900: #ffd61a;
+  --primary-color-dark-100: #e6bc00;
+  --primary-color-dark-200: #cca700;
+  --primary-color-dark-300: #b39200;
+  --primary-color-dark-400: #997d00;
+  --primary-color-dark-500: #806900;
+  --primary-color-dark-600: #665400;
+  --primary-color-dark-700: #4d3f00;
+  --primary-color-dark-800: #332a00;
+  --primary-color-dark-900: #191500;
+
+
+  --secondary-color-light-100: #e8e8e8
+  --secondary-color-light-200: #d1d1d1;
+  --secondary-color-light-300: #bababa;
+  --secondary-color-light-400: #a3a3a3;
+  --secondary-color-light-500: #8c8c8c;
+  --secondary-color-light-600: #747474;
+  --secondary-color-light-700: #5d5d5d;
+  --secondary-color-light-800: #464646;
+  --secondary-color-light-900: #2f2f2f;
+  --secondary-color-dark-100: #161616
+  --secondary-color-dark-200: #131313;
+  --secondary-color-dark-300: #111111;
+  --secondary-color-dark-400: #0e0e0e;
+  --secondary-color-dark-500: #0c0c0c;
+  --secondary-color-dark-600: #0a0a0a;
+  --secondary-color-dark-700: #070707;
+  --secondary-color-dark-800: #050505;
+  --secondary-color-dark-900: #020202;
+
+
+  --tertiary-color-light-100: #edf6f4;
+  --tertiary-color-light-200: #dbede8;
+  --tertiary-color-light-300: #c9e3dd;
+  --tertiary-color-light-400: #b7dad1;
+  --tertiary-color-light-500: #a5d1c6;
+  --tertiary-color-light-600: #94c8ba;
+  --tertiary-color-light-700: #82bfaf;
+  --tertiary-color-light-800: #70b6a3;
+  --tertiary-color-light-900: #5eac98;
+  --tertiary-color-dark-100: #498e7c;
+  --tertiary-color-dark-200: #417e6e;
+  --tertiary-color-dark-300: #396f61;
+  --tertiary-color-dark-400: #315f53;
+  --tertiary-color-dark-500: #294f45;
+  --tertiary-color-dark-600: #203f37;
+  --tertiary-color-dark-700: #182f29;
+  --tertiary-color-dark-800: #10201c;
+  --tertiary-color-dark-900: #08100e;
+
+
+  --primary-color: #FFD100;
+  --secondary-color: #181818;
+  --tertiary-color: #519E8A;
 }
 
 /* semantic color variables for this project */
