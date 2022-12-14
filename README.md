@@ -5,8 +5,8 @@ Simple Shopping list app
 TODO(Secondary):
 
 - Add pwa support - DONE
-- (5) List items status (Obtained: True/False), should be able to clear all item statuses **(WIP)**
-- (5) Item Quantity **(WIP)**
+- (5) List items status (Obtained: True/False), should be able to clear all item statuses **DONE**
+- (5) Item Quantity **DONE**
 - Add themeing (light/dark)
 - Update button colors
 - (5) List exporting( csv, txt, md )
