@@ -75,6 +75,14 @@ li {
   /* border: 1px solid red; */
 }
 
+button {
+  flex-grow: 1;
+}
+
+div {
+  flex-grow: 10;
+}
+
 p {
   margin: 0 1rem;
   /* -webkit-animation: fade-out 1s ease-out reverse both;
@@ -110,6 +118,5 @@ span.sub-text {
 div.desc-area {
   display: flex;
   flex-flow: row wrap;
-  right: 10rem;
 }
 </style>

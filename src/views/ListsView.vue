@@ -199,7 +199,7 @@ export default defineComponent({
   </main>
 </template>
 
-<style scop ed>
+<style scoped>
 main {
   display: flex;
   flex-flow: column nowrap;
