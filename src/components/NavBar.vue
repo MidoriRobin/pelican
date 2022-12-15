@@ -8,14 +8,14 @@
         <svg class="bi pe-none me-2" width="40" height="32">
           <use xlink:href="#bootstrap" />
         </svg>
-        <span class="fs-4">Sidebar</span>
+        <span class="fs-4">Pelican</span>
       </a>
       <hr />
     </div>
     <nav class="nav-main">
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <RouterLink to="/" class="nav-link text-white">
+          <RouterLink to="/" class="nav-link">
             <svg class="bi pe-none me-2" width="16" height="16">
               <use xlink:href="#home" />
             </svg>
@@ -23,7 +23,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/lists" class="nav-link text-white">
+          <RouterLink to="/lists" class="nav-link">
             <svg class="bi pe-none me-2" width="16" height="16">
               <use xlink:href="#speedometer2" />
             </svg>
@@ -36,7 +36,7 @@
       <hr />
       <button
         type="button"
-        class="btn btn-warning text-reset"
+        class="btn btn-warning"
         data-bs-dismiss="offcanvas"
         aria-label="Close"
       >
@@ -57,5 +57,9 @@ import { RouterLink } from "vue-router";
 
 .nav-bottom button {
   width: -webkit-fill-available;
+}
+
+.nav .active {
+  color: black;
 }
 </style>

@@ -23,6 +23,7 @@ export default defineComponent({
     //? Should emit or some custom event be used to update the list everytime an edit is made?
 
     this.shopLists = await idb.getShopLists();
+    console.log("List loading complete");
     this.loading = false;
   },
 
