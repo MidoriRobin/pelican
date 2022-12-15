@@ -4,8 +4,21 @@ Simple Shopping list app
 
 TODO(Secondary):
 
+- Add pwa support - DONE
+- (5) List items status (Obtained: True/False), should be able to clear all item statuses **DONE**
+- (5) Item Quantity **DONE**
 - Add themeing (light/dark)
-- Add pwa support
+- Update button colors
+- (5) List exporting( csv, txt, md )
+- Sub-Total adjustments (tax multipliers, shipping, etc)
+- List tracking (number of items gotten/ progress)
+- (5) Add tests
+- (5) Make lists collapsable
+- Check accessiblity
+- (4) Sharing lists
+  Bug:
+
+- List names with spaces cannot open drop down (fixed)
 
 ## Recommended IDE Setup
 

@@ -11,9 +11,9 @@ export default defineComponent({
     return {};
   },
   props: {
-    listId: { type: Number, required: false },
-    name: String,
-    listData: { type: Array<Item>, required: false },
+    listId: { type: Number, required: true },
+    name: { type: String, required: true },
+    listData: { type: Array<Item>, required: true },
   },
   methods: {
     addItem(item: Item) {
@@ -28,11 +28,28 @@ export default defineComponent({
       console.log("Deleting this list");
       this.$emit("delete-list", this.listId);
     },
+
+    giveString(): String {
+      return "String";
+    },
+    cleanName(): String {
+      let newString = "";
+
+      if (this.name !== "" || this.name !== undefined) {
+        newString = this.name.trim().split(" ").join("");
+      }
+
+      return newString;
+    },
     numToPrice(number: number) {
       return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(number);
+    },
+    updateListItem(item: Item) {
+      // Update item pass in updated item and list id
+      this.$emit("update-item", item, this.listId);
     },
   },
   computed: {
@@ -48,12 +65,12 @@ export default defineComponent({
       }, initialVal) as number;
     },
   },
-  emits: ["add-item", "delete-item", "delete-list"],
+  emits: ["add-item", "delete-item", "delete-list", "update-item"],
 });
 </script>
 
 <template>
-  <div class="accordion list-cont" :id="`accordion-${name}List`">
+  <div class="accordion list-cont" :id="`accordion-${cleanName()}List`">
     <div class="list-head">
       <!-- TODO: flex flow row, delete button icon? -->
       <h3>{{ name }} - {{ itemCount }}</h3>
@@ -68,15 +85,15 @@ export default defineComponent({
           class="accordion-button"
           type="button"
           data-bs-toggle="collapse"
-          :data-bs-target="`#collapse${name}ItemForm`"
+          :data-bs-target="`#collapse${cleanName()}ItemForm`"
         >
           Add an item
         </button>
       </h2>
       <div
         class="accordion-collapse collapse"
-        :id="`collapse${name}ItemForm`"
-        :data-bs-parent="`#accordion-${name}List`"
+        :id="`collapse${cleanName()}ItemForm`"
+        :data-bs-parent="`#accordion-${cleanName()}List`"
       >
         <div class="accordion-body">
           <ItemForm @submit-form="addItem" :list-id="listId" />
@@ -89,9 +106,10 @@ export default defineComponent({
       <ListItem
         v-for="item in listData"
         :key="item.name"
-        @delete-event="deleteItem(item)"
-        >{{ item.name }} - {{ numToPrice(item.price) }}</ListItem
-      >
+        @delete-event="deleteItem"
+        @update-event="updateListItem"
+        :item="item"
+      />
     </ul>
 
     <hr />

@@ -276,4 +276,26 @@ export default {
       store.delete([item.listId, item.name]);
     });
   },
+
+  async updateListItem(item: Item, listId: number) {
+    const db = await this.getDb();
+
+    console.log("updating item");
+
+    return new Promise<void>((resolve) => {
+      const trans = db.transaction([ITEMLIST_TABLE_NAME], "readwrite");
+
+      trans.oncomplete = () => {
+        resolve();
+      };
+
+      trans.onerror = () => {
+        console.log("Could not update item in list");
+      };
+
+      const store = trans.objectStore(ITEMLIST_TABLE_NAME);
+      console.log("Updating item: ", item);
+      store.put(item, [listId, item.name]);
+    });
+  },
 };

@@ -14,13 +14,17 @@ export default defineComponent({
       db: {} as IDBDatabase,
       ready: false,
       invalidList: false,
+      loading: true,
     };
   },
 
   async created() {
     this.db = await idb.getDb();
     //? Should emit or some custom event be used to update the list everytime an edit is made?
+
     this.shopLists = await idb.getShopLists();
+    console.log("List loading complete");
+    this.loading = false;
   },
 
   async beforeUpdate() {
@@ -52,6 +56,7 @@ export default defineComponent({
       this.shopLists = await idb.getShopLists();
     },
 
+    //! Unused
     async deleteFromList(itemId: number, listId: number) {
       console.log("deleting item from list: ", itemId);
 
@@ -60,6 +65,21 @@ export default defineComponent({
       // let newList = shopList.items.filter((item) => item.id !== itemId);
 
       console.log(shopList);
+    },
+
+    async updateItem(item: Item, listId: number) {
+      console.log("updating item: ", item.name);
+
+      //! Update call for indexed db not working as expected
+      // await idb.updateListItem(item, listId);
+
+      await this.deleteItem(item)
+        .then(async () => {
+          await this.addToList(item, listId);
+        })
+        .then(() => {
+          console.log("item updated in list");
+        });
     },
 
     async clearAllLists() {
@@ -158,17 +178,23 @@ export default defineComponent({
       <h4>These are the lists</h4>
       <!-- Example List -->
       <!-- <ListContainer name="First list" /> -->
-
+      <div v-if="loading" class="d-flex justify-content-center">
+        <div class="spinner-border text-warning" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <!-- TODO: Declare emits in component -->
       <ListContainer
+        v-else
         v-for="shopList in shopLists"
         :key="shopList.id"
-        :listId="shopList.id"
+        :listId="(shopList.id as number)"
         :name="shopList.name"
         :listData="shopList.items"
         @add-item="addToList"
         @delete-list="deleteList"
         @delete-item="deleteItem"
+        @update-item="updateItem"
       />
     </div>
   </main>
